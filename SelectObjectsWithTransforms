@@ -9,22 +9,15 @@ objects = cmds.ls(sl=True)
 cmds.select(clear=True)
 
 for each in objects:
-    attr = [cmds.getAttr(each+'.tx')]
-    attr.append(cmds.getAttr(each+'.ty'))
-    attr.append(cmds.getAttr(each+'.tz'))
     
-    attr.append(cmds.getAttr(each+'.rx'))
-    attr.append(cmds.getAttr(each+'.ry'))
-    attr.append(cmds.getAttr(each+'.rz'))
+    translate = list(cmds.getAttr(each+'.translate')[0])
+    rotate = list(cmds.getAttr(each+'.rotate')[0])
+    scale = list(cmds.getAttr(each+'.scale')[0])
     
-    scaleAttr = [cmds.getAttr(each+'.sx')]
-    scaleAttr.append(cmds.getAttr(each+'.sy'))
-    scaleAttr.append(cmds.getAttr(each+'.sz'))
-    
-    for attribute in attr:
+    for attribute in translate or rotate:
         if attribute != 0.0:
             cmds.select(each, add=True)
             
-    for value in scaleAttr:
+    for value in scale:
         if value != 1.0:
             cmds.select(each, add=True)
