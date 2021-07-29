@@ -1,3 +1,0 @@
-#MEL command to hide weird nodes in Graph Editor
-
-outlinerEditor -e -hir 1 graphEditor1OutlineEd;
