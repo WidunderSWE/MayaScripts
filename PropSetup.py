@@ -13,7 +13,7 @@ prop_rotOrder = cmds.getAttr('{0}.rotateOrder'.format(prop))
 
 #Create Locators and Set Rotation Orders
 rootLoc = cmds.spaceLocator(name='prop_rootLoc')
-cmds.setAttr('.localScale', 25, 25, 25)
+cmds.setAttr('.localScale', 0, 0, 0)
 cmds.setAttr('.rotateOrder', root_rotOrder)
 cmds.setAttr('.overrideEnabled', 1)
 cmds.setAttr('.overrideColor', 17)
