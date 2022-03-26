@@ -1,0 +1,31 @@
+import maya.cmds as cmds
+import maya.mel as mel
+
+'''
+Set Keyframes in the middle of selected frames in timeline
+INSTRUCTIONS
+- Select a range of frames in timeline
+- Run Script
+- Keyframe will be set on selected object in the middle of the selected range
+'''
+
+def selectionError():
+    sel=cmds.ls(sl=True)
+    if len(sel) == 0:
+        cmds.error("Nothing Selected To Key")
+        
+selectionError()
+
+aTimeSlider = mel.eval('$tmpVar=$gPlayBackSlider')
+timeRange = cmds.timeControl(aTimeSlider, q=True, rangeArray=True)
+firstFrame = int(timeRange[0])
+lastFrame = int(timeRange[1])
+
+chosenFrames = range(firstFrame, lastFrame)
+
+frameLength = len(chosenFrames)
+midFrame = (frameLength/2)
+midFrame = int(midFrame)
+midFrameTime = firstFrame+midFrame
+
+cmds.setKeyframe(time=midFrameTime, insert=True)
