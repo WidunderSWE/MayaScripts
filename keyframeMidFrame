@@ -4,7 +4,7 @@ import maya.mel as mel
 '''
 Set Keyframes in the middle of selected frames in timeline
 INSTRUCTIONS
-- Select a range of frames in timeline
+- Select a range of frames in timeline or keys in the graph editor
 - Run Script
 - Keyframe will be set on selected object in the middle of the selected range
 '''
@@ -16,6 +16,52 @@ def selectionError():
         
 selectionError()
 
+#grapEditor
+
+graphKeys = cmds.keyframe(q=True, sl=True, n=True)
+
+tx = 'translateX'
+ty = 'translateY'
+tz = 'translateZ'
+
+rx = 'rotateX'
+ry = 'rotateY'
+rz = 'rotateZ'
+
+sx = 'scaleX'
+sy = 'scaleY'
+sz = 'scaleZ'
+
+if graphKeys is not None:
+    for keys in graphKeys:
+        keyTimes = cmds.keyframe(keys,sl=True,query=True,tc=True)
+        firstKey = int(keyTimes[0])
+        lastKey = int(keyTimes[-1])
+        midPoint = int((firstKey+lastKey)/2)
+        print (keys)
+        print (midPoint)
+        if tx in keys:
+            cmds.setKeyframe(time=midPoint, insert=True, attribute=tx)
+        if ty in keys:
+            cmds.setKeyframe(time=midPoint, insert=True, attribute=ty)
+        if tz in keys:
+            cmds.setKeyframe(time=midPoint, insert=True, attribute=tz)
+        if rx in keys:
+            cmds.setKeyframe(time=midPoint, insert=True, attribute=rx)
+        if ry in keys:
+            cmds.setKeyframe(time=midPoint, insert=True, attribute=ry)
+        if rz in keys:
+            cmds.setKeyframe(time=midPoint, insert=True, attribute=rz)
+        if sx in keys:
+            cmds.setKeyframe(time=midPoint, insert=True, attribute=sx)
+        if sy in keys:
+            cmds.setKeyframe(time=midPoint, insert=True, attribute=sy)
+        if sz in keys:
+            cmds.setKeyframe(time=midPoint, insert=True, attribute=sz)
+
+
+
+#Timeline
 aTimeSlider = mel.eval('$tmpVar=$gPlayBackSlider')
 timeRange = cmds.timeControl(aTimeSlider, q=True, rangeArray=True)
 firstFrame = int(timeRange[0])
