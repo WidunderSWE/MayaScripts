@@ -1,0 +1,14 @@
+import maya.cmds as cmds
+
+selection = cmds.ls(sl=True)
+
+cmds.duplicate(selection)
+
+selection = cmds.ls(sl=True)
+
+
+for joint in selection:
+    cmds.parent("nurbsCircleShape1", joint, addObject=True, shape=True)
+
+
+#cmds.parent("nurbsCircleShape1", "joint1", addObject=True, shape=True)
