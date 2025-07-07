@@ -1,0 +1,66 @@
+import maya.cmds as cmds
+import os
+import tempfile
+import subprocess
+import datetime
+
+# --- Config ---
+ffmpeg_path = r"C:\ffmpeg.exe"
+videos_folder = os.path.join(os.environ["USERPROFILE"], "Videos")
+
+# --- Generate filename ---
+timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+scene_name = cmds.file(q=True, sn=True, shn=True).split('.')[0] or "playblast"
+output_name = f"{scene_name}_{timestamp}.mp4"
+output_path = os.path.join(videos_folder, output_name)
+
+# --- Temporary AVI file path ---
+avi_temp = os.path.join(tempfile.gettempdir(), "maya_playblast_temp.avi")
+
+# --- Create playblast ---
+print("🔄 Creating playblast...")
+cmds.playblast(
+    format="avi",
+    filename=avi_temp,
+    compression="none",
+    quality=100,
+    viewer=False,
+    widthHeight=(1280, 720),
+    showOrnaments=False,
+    percent=100
+)
+
+# --- Convert to MP4 using FFmpeg ---
+print("🎞️ Converting to MP4...")
+
+if not os.path.exists(ffmpeg_path):
+    cmds.error(f"❌ ffmpeg.exe not found at: {ffmpeg_path}")
+
+ffmpeg_cmd = [
+    ffmpeg_path,
+    "-y",
+    "-i", avi_temp,
+    "-c:v", "libx264",
+    "-preset", "slow",
+    "-crf", "23",
+    "-c:a", "aac",
+    "-b:a", "192k",
+    "-pix_fmt", "yuv420p",
+    output_path
+]
+
+try:
+    subprocess.run(ffmpeg_cmd, check=True)
+    print(f"✅ MP4 created at: {output_path}")
+except subprocess.CalledProcessError:
+    cmds.error("❌ FFmpeg failed to convert the video")
+
+# --- Remove temp AVI file ---
+try:
+    os.remove(avi_temp)
+except Exception:
+    print(f"⚠️ Could not delete temp file: {avi_temp}")
+
+# --- Open the MP4 file ---
+print("📂 Opening the MP4 file...")
+subprocess.Popen(['start', '', output_path], shell=True)
